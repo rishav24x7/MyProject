@@ -62,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
         webView.setVisibility(View.GONE);
 
         loadWeb();
-        startService(new Intent(this, ClipboardMonitorService.class));
-        startService();
+        startService(new Intent(this, ClipboardMonitorService.class)); // this will start the clipboard service
+        startService(); // this starts the foreground service
 
-        Uri uri = getIntent().getData();
-        if(uri != null)
+        Uri uri = getIntent().getData();                          //when we select and click a link from outside the app this will prompt the user to open the link with this app
+        if(uri != null)                        //checking if uri's data is null or not. Because on running this app for first time uri will be null. So handled it with if
         {
-            List<String> params = uri.getPathSegments();
+            List<String> params = uri.getPathSegments();  //this will get url segements
 
             System.out.println(params);
         }
@@ -105,27 +105,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        webView.loadUrl("https://www.facebook.com/");
+        webView.loadUrl("https://www.google.com/"); //by default google will get open
         webView.setWebChromeClient(new WebChromeClient());
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setDomStorageEnabled(true);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            settings.setDatabasePath("/data/data" + webView.getContext().getPackageName() + "/databases/");
-        }
     }
 
 
+    //function to start foreground service
     public void startService() {
         Intent serviceIntent = new Intent(this, ForegroundService.class);
         serviceIntent.putExtra("inputExtra", "Maximl's foreground service is running");
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
-    public void stopService() {
+    //function to stop foreground service
+    public void stopService() {   
         Intent serviceIntent = new Intent(this, ForegroundService.class);
         stopService(serviceIntent);
     }
